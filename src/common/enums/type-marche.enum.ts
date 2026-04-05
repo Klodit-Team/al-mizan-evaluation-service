@@ -1,0 +1,5 @@
+export enum TypeMarche {
+  TRAVAUX = 'TRAVAUX',
+  FOURNITURES = 'FOURNITURES',
+  SERVICES = 'SERVICES',
+}

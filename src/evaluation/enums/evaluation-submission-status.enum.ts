@@ -1,0 +1,7 @@
+export enum EvaluationSubmissionStatus {
+  EN_ATTENTE = 'EN_ATTENTE',
+  EN_EVALUATION = 'EN_EVALUATION',
+  QUALIFIEE = 'QUALIFIEE',
+  CLASSEE = 'CLASSEE',
+  ELIMINEE = 'ELIMINEE',
+}

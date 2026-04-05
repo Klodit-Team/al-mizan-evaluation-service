@@ -1,0 +1,5 @@
+export enum EvaluationType {
+  ELIGIBILITE = 'ELIGIBILITE',
+  TECHNIQUE = 'TECHNIQUE',
+  FINANCIERE = 'FINANCIERE',
+}

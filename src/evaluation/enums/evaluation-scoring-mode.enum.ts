@@ -1,0 +1,4 @@
+export enum EvaluationScoringMode {
+  GRILLE_CRITERES = 'GRILLE_CRITERES',
+  FORMULE_MOINS_DISANTE = 'FORMULE_MOINS_DISANTE',
+}

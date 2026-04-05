@@ -1,0 +1,9 @@
+export enum EvaluationStatus {
+  BROUILLON = 'BROUILLON',
+  PRETE = 'PRETE',
+  EN_COURS = 'EN_COURS',
+  TERMINEE = 'TERMINEE',
+  VALIDEE = 'VALIDEE',
+  ARCHIVEE = 'ARCHIVEE',
+  ANNULEE = 'ANNULEE',
+}
