@@ -229,12 +229,3 @@ Le seed crée:
 - une évaluation financière prête à être exploitée
 - une évaluation d'éligibilité en brouillon
 
-## Plan d'implémentation retenu
-
-1. Isoler le domaine évaluation dans un microservice dédié.
-2. Garder les dépendances inter-services sous forme d'identifiants externes.
-3. Implémenter le scoring de manière déterministe et auditable.
-4. Masquer les identités pendant les évaluations en aveugle.
-5. Générer un rapport PDF stocké dans MinIO.
-6. Publier les événements métier pour l'audit et les notifications.
-7. Documenter le contrat HTTP, l'environnement et les hypothèses d'intégration.
