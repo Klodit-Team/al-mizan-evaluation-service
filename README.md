@@ -10,21 +10,6 @@ Il couvre le backlog CSL §3.2.6:
 - calcul des scores, éliminations et classement
 - génération du rapport final d'évaluation
 
-## Positionnement
-
-Ce service est volontairement séparé du `commission-service`.
-
-Il **ne gère pas**:
-- la constitution des commissions
-- les séances d'ouverture des plis
-- les procès-verbaux d'ouverture
-
-Il **gère**:
-- la logique d'évaluation métier
-- le scoring technique/financier
-- le masquage d'identité pour l'évaluation en aveugle
-- les rapports finaux d'évaluation
-
 ## Architecture
 
 - Port HTTP: `8008`
