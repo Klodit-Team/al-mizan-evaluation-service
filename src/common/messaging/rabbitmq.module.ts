@@ -16,7 +16,7 @@ export const RABBITMQ_CLIENT = 'RABBITMQ_CLIENT';
             urls: [
               config.get<string>(
                 'RABBITMQ_URL',
-                'amqp://guest:guest@localhost:5672',
+                'amqp://guest:guest@localhost:5673',
               ),
             ],
             queue: config.get<string>('RABBITMQ_QUEUE', 'evaluation_events'),

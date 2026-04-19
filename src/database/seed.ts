@@ -2,6 +2,7 @@ import 'reflect-metadata';
 import { DataSource } from 'typeorm';
 import { createHash } from 'crypto';
 import { EvaluationCriterion } from '../evaluation/entities/evaluation-criterion.entity';
+import { EvaluationNote } from '../evaluation/entities/evaluation-note.entity';
 import { EvaluationReport } from '../evaluation/entities/evaluation-report.entity';
 import { EvaluationResult } from '../evaluation/entities/evaluation-result.entity';
 import { EvaluationSubmission } from '../evaluation/entities/evaluation-submission.entity';
@@ -22,6 +23,7 @@ const dataSource = new DataSource({
   entities: [
     Evaluation,
     EvaluationCriterion,
+    EvaluationNote,
     EvaluationSubmission,
     EvaluationResult,
     EvaluationReport,
