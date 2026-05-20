@@ -21,6 +21,6 @@ jobs:
             echo "🚀 Starting Deployment for evaluation-service..."
             cd ~/evaluation-service
             git pull
-            cd ~/al-mizan-deployment
-            sudo docker-compose up -d --build evaluation-service
+            cd ~/al-mizan-deployments
+            docker compose up -d --build evaluation-service
             echo "✅ Deployment Successful!"
