@@ -8,6 +8,7 @@ import {
   Unique,
   UpdateDateColumn,
 } from 'typeorm';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { decimalTransformer } from '../../common/transformers/decimal.transformer';
 import { EvaluationNoteSource } from '../enums/evaluation-note-source.enum';
 import { EvaluationCriterion } from './evaluation-criterion.entity';
@@ -17,6 +18,7 @@ import { Evaluation } from './evaluation.entity';
 @Entity('evaluation_notes')
 @Unique(['evaluationSubmissionId', 'criterionId', 'evaluatorId', 'source'])
 export class EvaluationNote {
+  @ApiProperty()
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -26,6 +28,7 @@ export class EvaluationNote {
   @JoinColumn({ name: 'evaluationId' })
   evaluation: Evaluation;
 
+  @ApiProperty()
   @Column('uuid')
   evaluationId: string;
 
@@ -35,6 +38,7 @@ export class EvaluationNote {
   @JoinColumn({ name: 'evaluationSubmissionId' })
   evaluationSubmission: EvaluationSubmission;
 
+  @ApiProperty()
   @Column('uuid')
   evaluationSubmissionId: string;
 
@@ -44,15 +48,19 @@ export class EvaluationNote {
   @JoinColumn({ name: 'criterionId' })
   criterion: EvaluationCriterion;
 
+  @ApiProperty()
   @Column('uuid')
   criterionId: string;
 
+  @ApiProperty()
   @Column({ length: 128 })
   evaluatorId: string;
 
+  @ApiPropertyOptional()
   @Column({ type: 'varchar', length: 255, nullable: true })
   evaluatorName: string | null;
 
+  @ApiProperty({ enum: EvaluationNoteSource })
   @Column({
     type: 'enum',
     enum: EvaluationNoteSource,
@@ -60,6 +68,7 @@ export class EvaluationNote {
   })
   source: EvaluationNoteSource;
 
+  @ApiProperty()
   @Column({
     type: 'decimal',
     precision: 7,
@@ -68,9 +77,11 @@ export class EvaluationNote {
   })
   note: number;
 
+  @ApiProperty()
   @Column({ type: 'text' })
   justification: string;
 
+  @ApiPropertyOptional()
   @Column({
     type: 'decimal',
     precision: 5,
@@ -80,9 +91,11 @@ export class EvaluationNote {
   })
   scoreConfiance: number | null;
 
+  @ApiProperty()
   @CreateDateColumn()
   createdAt: Date;
 
+  @ApiProperty()
   @UpdateDateColumn()
   updatedAt: Date;
 }

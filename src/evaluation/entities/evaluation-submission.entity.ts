@@ -10,6 +10,7 @@ import {
   Unique,
   UpdateDateColumn,
 } from 'typeorm';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { decimalTransformer } from '../../common/transformers/decimal.transformer';
 import { EvaluationRecommendation } from '../enums/evaluation-recommendation.enum';
 import { EvaluationSubmissionStatus } from '../enums/evaluation-submission-status.enum';
@@ -20,6 +21,7 @@ import { EvaluationResult } from './evaluation-result.entity';
 @Entity('evaluation_submissions')
 @Unique(['evaluationId', 'externalSubmissionId'])
 export class EvaluationSubmission {
+  @ApiProperty()
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -29,24 +31,31 @@ export class EvaluationSubmission {
   @JoinColumn({ name: 'evaluationId' })
   evaluation: Evaluation;
 
+  @ApiProperty()
   @Column('uuid')
   evaluationId: string;
 
+  @ApiProperty()
   @Column({ length: 128 })
   externalSubmissionId: string;
 
+  @ApiPropertyOptional()
   @Column({ type: 'varchar', length: 128, nullable: true })
   operateurEconomiqueId: string | null;
 
+  @ApiPropertyOptional()
   @Column({ type: 'varchar', length: 255, nullable: true })
   operateurNom: string | null;
 
+  @ApiProperty()
   @Column({ length: 64 })
   aliasAnonyme: string;
 
+  @ApiPropertyOptional()
   @Column({ type: 'varchar', length: 128, nullable: true })
   lotId: string | null;
 
+  @ApiPropertyOptional()
   @Column({
     type: 'decimal',
     precision: 15,
@@ -56,9 +65,11 @@ export class EvaluationSubmission {
   })
   montantOffre: number | null;
 
+  @ApiProperty()
   @Column({ length: 8, default: 'DZD' })
   devise: string;
 
+  @ApiProperty({ enum: EvaluationSubmissionStatus })
   @Column({
     type: 'enum',
     enum: EvaluationSubmissionStatus,
@@ -66,9 +77,11 @@ export class EvaluationSubmission {
   })
   statut: EvaluationSubmissionStatus;
 
+  @ApiPropertyOptional()
   @Column({ type: 'text', nullable: true })
   motifElimination: string | null;
 
+  @ApiPropertyOptional()
   @Column({
     type: 'decimal',
     precision: 7,
@@ -78,6 +91,7 @@ export class EvaluationSubmission {
   })
   scoreTechnique: number | null;
 
+  @ApiPropertyOptional()
   @Column({
     type: 'decimal',
     precision: 7,
@@ -87,6 +101,7 @@ export class EvaluationSubmission {
   })
   scoreFinancier: number | null;
 
+  @ApiPropertyOptional()
   @Column({
     type: 'decimal',
     precision: 7,
@@ -96,6 +111,7 @@ export class EvaluationSubmission {
   })
   scoreGlobal: number | null;
 
+  @ApiPropertyOptional()
   @Column({
     type: 'decimal',
     precision: 7,
@@ -105,9 +121,11 @@ export class EvaluationSubmission {
   })
   scoreMoyen: number | null;
 
+  @ApiPropertyOptional()
   @Column({ type: 'int', nullable: true })
   rang: number | null;
 
+  @ApiPropertyOptional({ enum: EvaluationRecommendation })
   @Column({
     type: 'enum',
     enum: EvaluationRecommendation,
@@ -115,18 +133,23 @@ export class EvaluationSubmission {
   })
   recommandation: EvaluationRecommendation | null;
 
+  @ApiPropertyOptional()
   @Column({ type: 'simple-json', nullable: true })
   metadata: Record<string, unknown> | null;
 
+  @ApiProperty({ type: () => [EvaluationNote] })
   @OneToMany(() => EvaluationNote, (note) => note.evaluationSubmission)
   notes: EvaluationNote[];
 
+  @ApiPropertyOptional({ type: () => EvaluationResult })
   @OneToOne(() => EvaluationResult, (result) => result.evaluationSubmission)
   resultat: EvaluationResult;
 
+  @ApiProperty()
   @CreateDateColumn()
   createdAt: Date;
 
+  @ApiProperty()
   @UpdateDateColumn()
   updatedAt: Date;
 }
