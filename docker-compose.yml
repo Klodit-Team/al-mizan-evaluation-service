@@ -8,14 +8,14 @@ services:
       - "8008:8008"
     environment:
       - PORT=8008
-      - DB_HOST=mysql
+      - DB_HOST=evaluation-mysql
       - DB_PORT=3306
       - DB_USERNAME=evaluation
       - DB_PASSWORD=evaluation_secret
       - DB_DATABASE=evaluation_db
-      - RABBITMQ_URL=amqp://guest:guest@rabbitmq:5672
+      - RABBITMQ_URL=amqp://guest:guest@al-mizan-rabbitmq:5672
       - RABBITMQ_QUEUE=evaluation_events
-      - MINIO_ENDPOINT=minio
+      - MINIO_ENDPOINT=al-mizan-minio
       - MINIO_PORT=9000
       - MINIO_USE_SSL=false
       - MINIO_PUBLIC_ENDPOINT=localhost
@@ -28,12 +28,8 @@ services:
     depends_on:
       mysql:
         condition: service_healthy
-      rabbitmq:
-        condition: service_healthy
-      minio:
-        condition: service_healthy
     networks:
-      - evaluation-network
+      - al-mizan-network
     restart: unless-stopped
 
   mysql:
@@ -55,57 +51,13 @@ services:
       retries: 5
       start_period: 30s
     networks:
-      - evaluation-network
-    restart: unless-stopped
-
-  rabbitmq:
-    image: rabbitmq:3-management-alpine
-    container_name: evaluation-rabbitmq
-    ports:
-      - "5674:5672"
-      - "15674:15672"
-    environment:
-      - RABBITMQ_DEFAULT_USER=guest
-      - RABBITMQ_DEFAULT_PASS=guest
-    volumes:
-      - rabbitmq_data:/var/lib/rabbitmq
-    healthcheck:
-      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 30s
-    networks:
-      - evaluation-network
-    restart: unless-stopped
-
-  minio:
-    image: minio/minio:latest
-    container_name: evaluation-minio
-    ports:
-      - "9002:9000"
-      - "9003:9001"
-    environment:
-      - MINIO_ROOT_USER=minioadmin
-      - MINIO_ROOT_PASSWORD=minioadmin
-    command: server /data --console-address ":9001"
-    volumes:
-      - minio_data:/data
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 10s
-    networks:
-      - evaluation-network
+      - al-mizan-network
     restart: unless-stopped
 
 volumes:
   mysql_data:
-  rabbitmq_data:
-  minio_data:
 
 networks:
-  evaluation-network:
-    driver: bridge
+  al-mizan-network:
+    name: al-mizan-network
+    external: true
