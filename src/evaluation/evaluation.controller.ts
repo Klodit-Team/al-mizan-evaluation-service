@@ -35,6 +35,8 @@ import { UpdateCriterionDto } from './dto/update-criterion.dto';
 import { UpdateEvaluationDto } from './dto/update-evaluation.dto';
 import { UpdateSubmissionDto } from './dto/update-submission.dto';
 import { UpsertNoteDto } from './dto/upsert-note.dto';
+import { WriteScoreIaDto } from './dto/write-score-ia.dto';
+import { WriteComparisonDto } from './dto/write-comparison.dto';
 import { EvaluationService } from './evaluation.service';
 import { Evaluation } from './entities/evaluation.entity';
 import { EvaluationCriterion } from './entities/evaluation-criterion.entity';
@@ -238,6 +240,32 @@ export class EvaluationController {
     @CurrentUser() user: GatewayUser,
   ): Promise<any> {
     return this.service.upsertNote(id, submissionId, dto, user.id);
+  }
+
+  @Post(':id/soumissions/:submissionId/score-ia')
+  @ApiOperation({ summary: "Enregistrer le score global calculé par l'agent IA (write_score_ia)" })
+  @ApiParam({ name: 'id', description: "UUID de l'évaluation" })
+  @ApiParam({ name: 'submissionId', description: "UUID de la soumission dans l'évaluation" })
+  @ApiResponse({ status: 201, description: 'Score IA enregistré dans metadata de la soumission.' })
+  writeScoreIa(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Param('submissionId', ParseUUIDPipe) submissionId: string,
+    @Body() dto: WriteScoreIaDto,
+  ): Promise<any> {
+    return this.service.writeScoreIa(id, submissionId, dto);
+  }
+
+  @Post(':id/soumissions/:submissionId/comparison')
+  @ApiOperation({ summary: 'Enregistrer la comparaison divergence IA/Commission (write_comparison)' })
+  @ApiParam({ name: 'id', description: "UUID de l'évaluation" })
+  @ApiParam({ name: 'submissionId', description: "UUID de la soumission dans l'évaluation" })
+  @ApiResponse({ status: 201, description: 'Comparaison enregistrée dans metadata de la soumission.' })
+  writeComparison(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Param('submissionId', ParseUUIDPipe) submissionId: string,
+    @Body() dto: WriteComparisonDto,
+  ): Promise<any> {
+    return this.service.writeComparison(id, submissionId, dto);
   }
 
   @Post(':id/recalculer-scores')

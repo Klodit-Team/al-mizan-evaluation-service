@@ -24,6 +24,8 @@ import { UpdateCriterionDto } from './dto/update-criterion.dto';
 import { UpdateEvaluationDto } from './dto/update-evaluation.dto';
 import { UpdateSubmissionDto } from './dto/update-submission.dto';
 import { UpsertNoteDto } from './dto/upsert-note.dto';
+import { WriteScoreIaDto } from './dto/write-score-ia.dto';
+import { WriteComparisonDto } from './dto/write-comparison.dto';
 import { EvaluationCriterion } from './entities/evaluation-criterion.entity';
 import { EvaluationNote } from './entities/evaluation-note.entity';
 import { EvaluationReport } from './entities/evaluation-report.entity';
@@ -1729,6 +1731,67 @@ export class EvaluationService {
     });
 
     return this.getLatestReport(evaluationId);
+  }
+
+  async writeScoreIa(evaluationId: string, submissionId: string, dto: WriteScoreIaDto) {
+    const submission = await this.submissionRepo.findOne({
+      where: { id: submissionId, evaluationId },
+    });
+    if (!submission) {
+      throw new NotFoundException(`Soumission "${submissionId}" introuvable dans l'évaluation "${evaluationId}".`);
+    }
+
+    submission.metadata = {
+      ...(submission.metadata ?? {}),
+      iaScore: {
+        scoreTechnique: dto.scoreTechnique ?? null,
+        scoreFinancier: dto.scoreFinancier ?? null,
+        scoreGlobal: dto.scoreGlobal,
+        ranking: dto.ranking ?? null,
+        recommendation: dto.recommendation ?? null,
+        confianceScore: dto.confianceScore ?? null,
+        recordedAt: new Date().toISOString(),
+      },
+    };
+
+    const saved = await this.submissionRepo.save(submission);
+    this.emit(EVALUATION_EVENTS.NOTE_RECORDED, {
+      evaluationId,
+      submissionId,
+      type: 'SCORE_IA',
+      scoreGlobal: dto.scoreGlobal,
+    });
+
+    return { submissionId: saved.id, iaScore: (saved.metadata as Record<string, unknown>)?.iaScore };
+  }
+
+  async writeComparison(evaluationId: string, submissionId: string, dto: WriteComparisonDto) {
+    const submission = await this.submissionRepo.findOne({
+      where: { id: submissionId, evaluationId },
+    });
+    if (!submission) {
+      throw new NotFoundException(`Soumission "${submissionId}" introuvable dans l'évaluation "${evaluationId}".`);
+    }
+
+    submission.metadata = {
+      ...(submission.metadata ?? {}),
+      iaComparison: {
+        divergenceScore: dto.divergenceScore,
+        characterization: dto.characterization ?? null,
+        details: dto.details ?? null,
+        recordedAt: new Date().toISOString(),
+      },
+    };
+
+    const saved = await this.submissionRepo.save(submission);
+    this.emit(EVALUATION_EVENTS.NOTE_RECORDED, {
+      evaluationId,
+      submissionId,
+      type: 'COMPARISON_IA',
+      divergenceScore: dto.divergenceScore,
+    });
+
+    return { submissionId: saved.id, iaComparison: (saved.metadata as Record<string, unknown>)?.iaComparison };
   }
 
   async getLatestReport(evaluationId: string) {
