@@ -762,6 +762,13 @@ export class EvaluationService {
       changedAt: new Date().toISOString(),
     });
 
+    if (saved.statut === EvaluationStatus.EN_COURS) {
+      this.emit('evaluation.session.started', {
+        aoId: saved.appelOffreId,
+        evaluationId: saved.id,
+      });
+    }
+
     return this.findOne(saved.id);
   }
 
