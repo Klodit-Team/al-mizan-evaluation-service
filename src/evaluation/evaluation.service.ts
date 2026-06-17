@@ -1082,16 +1082,6 @@ export class EvaluationService {
       throw new NotFoundException(`Évaluation "${evaluationId}" introuvable.`);
     }
 
-    if (
-      ![EvaluationStatus.PRETE, EvaluationStatus.EN_COURS].includes(
-        evaluation.statut,
-      )
-    ) {
-      throw new ConflictException(
-        'Les notes ne peuvent être enregistrées que pendant une évaluation prête ou en cours.',
-      );
-    }
-
     if (evaluation.scoringMode !== EvaluationScoringMode.GRILLE_CRITERES) {
       throw new ConflictException(
         "Cette évaluation n'accepte pas de notation manuelle par critère.",
@@ -1744,12 +1734,18 @@ export class EvaluationService {
     return this.getLatestReport(evaluationId);
   }
 
-  async writeScoreIa(evaluationId: string, submissionId: string, dto: WriteScoreIaDto) {
+  async writeScoreIa(
+    evaluationId: string,
+    submissionId: string,
+    dto: WriteScoreIaDto,
+  ) {
     const submission = await this.submissionRepo.findOne({
       where: { id: submissionId, evaluationId },
     });
     if (!submission) {
-      throw new NotFoundException(`Soumission "${submissionId}" introuvable dans l'évaluation "${evaluationId}".`);
+      throw new NotFoundException(
+        `Soumission "${submissionId}" introuvable dans l'évaluation "${evaluationId}".`,
+      );
     }
 
     submission.metadata = {
@@ -1773,15 +1769,24 @@ export class EvaluationService {
       scoreGlobal: dto.scoreGlobal,
     });
 
-    return { submissionId: saved.id, iaScore: (saved.metadata as Record<string, unknown>)?.iaScore };
+    return {
+      submissionId: saved.id,
+      iaScore: (saved.metadata as Record<string, unknown>)?.iaScore,
+    };
   }
 
-  async writeComparison(evaluationId: string, submissionId: string, dto: WriteComparisonDto) {
+  async writeComparison(
+    evaluationId: string,
+    submissionId: string,
+    dto: WriteComparisonDto,
+  ) {
     const submission = await this.submissionRepo.findOne({
       where: { id: submissionId, evaluationId },
     });
     if (!submission) {
-      throw new NotFoundException(`Soumission "${submissionId}" introuvable dans l'évaluation "${evaluationId}".`);
+      throw new NotFoundException(
+        `Soumission "${submissionId}" introuvable dans l'évaluation "${evaluationId}".`,
+      );
     }
 
     submission.metadata = {
@@ -1802,7 +1807,10 @@ export class EvaluationService {
       divergenceScore: dto.divergenceScore,
     });
 
-    return { submissionId: saved.id, iaComparison: (saved.metadata as Record<string, unknown>)?.iaComparison };
+    return {
+      submissionId: saved.id,
+      iaComparison: (saved.metadata as Record<string, unknown>)?.iaComparison,
+    };
   }
 
   async getLatestReport(evaluationId: string) {
