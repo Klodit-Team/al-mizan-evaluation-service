@@ -1082,9 +1082,13 @@ export class EvaluationService {
       throw new NotFoundException(`Évaluation "${evaluationId}" introuvable.`);
     }
 
-    if (evaluation.statut !== EvaluationStatus.EN_COURS) {
+    if (
+      ![EvaluationStatus.PRETE, EvaluationStatus.EN_COURS].includes(
+        evaluation.statut,
+      )
+    ) {
       throw new ConflictException(
-        'Les notes ne peuvent être enregistrées que pendant une évaluation en cours.',
+        'Les notes ne peuvent être enregistrées que pendant une évaluation prête ou en cours.',
       );
     }
 
