@@ -266,7 +266,9 @@ export class EvaluationService {
 
   private isEditableStatus(status: EvaluationStatus): boolean {
     return (
-      status === EvaluationStatus.BROUILLON || status === EvaluationStatus.PRETE
+      status === EvaluationStatus.BROUILLON ||
+      status === EvaluationStatus.PRETE ||
+      status === EvaluationStatus.EN_COURS
     );
   }
 
